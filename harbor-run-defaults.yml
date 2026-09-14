@@ -1,0 +1,34 @@
+# Defaults for the TB3 execution automations — read by the in-repo workflows for the
+# validation stage (oracle + nop), the gating pass@2 pre-check, and the advisory /run and
+# /cheat trials. This file lives in the task repo itself (self-contained template); edit it
+# here to tune the pipeline for this task.
+
+# Trials per agent for the advisory /run difficulty trials (pass@k).
+trials: 5
+
+# ─────────────────────────── Environment backend ───────────────────────────
+#  - validate_env: validation stage (Docker build + oracle + nop) — runs on the GitHub
+#                  runner in docker. Cheap, deterministic, key-free.
+#  - env:          agent trials (pass@2 pre-check, /run, /cheat) — remote DAYTONA sandboxes,
+#                  off the CI host. Requires DAYTONA_API_KEY / DAYTONA_TARGET.
+# Accepts docker|daytona|modal|e2b|... ; override per-run with `/run env=…`.
+# NOTE: TB3 permits single-H100 GPU tasks; Daytona may not provision H100. If GPU tasks are
+# accepted, add a modal backend here (see docs/decisions.md · backend).
+validate_env: docker
+env: daytona
+
+# ─────────────────────────── Agents / models ───────────────────────────
+# Agent trials (pass@2 pre-check + /run) use these. terminus-2 runs the model loop ON THE
+# RUNNER via LiteLLM (the sandbox stays keyless); the provider is chosen from the model
+# prefix. Adjust the model as the frontier moves.
+agents:
+  - agent: terminus-2
+    model: openrouter/openai/gpt-5.6-sol
+    kwargs:
+      llm_kwargs:
+        max_tokens: 128000
+
+# Trajectory analysis (harbor analyze) for the pass@2 valid-fail classification + /run
+# analyze. Uses the TB3 trial-analysis rubric. Anthropic-direct.
+analyze: true
+analyze_model: claude-sonnet-4-6

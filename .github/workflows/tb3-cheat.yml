@@ -1,0 +1,24 @@
+# TB3 red-team reward-hacking trial — maintainer `/cheat`, advisory.
+#
+# PROVIDED workflow: a thin pointer. Maintained centrally in handshake-orchestration-tb3.
+#
+# Copy to: .github/workflows/tb3-cheat.yml in each task repo.
+
+name: TB3 Cheat
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  cheat:
+    # Filter here so an ordinary PR comment never starts a runner. The write-access
+    # check and the head-SHA pin live in the reusable workflow, where a task repo
+    # cannot weaken them.
+    if: ${{ github.event.issue.pull_request && startsWith(github.event.comment.body, '/cheat') }}
+    uses: handshake-project-insight/handshake-orchestration-tb3/.github/workflows/tb3-cheat.yml@main
+    secrets: inherit

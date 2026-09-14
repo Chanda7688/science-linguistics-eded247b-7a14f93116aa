@@ -1,0 +1,31 @@
+artifacts = ["/app/"]  # paths the verifier reads to validate correctness
+
+schema_version = "2.0"
+
+[task]
+name = "insight/REPLACE-with-task-name"   # rename with "insight/your-task-name" in kebab-case
+description = ""
+
+[metadata]
+difficulty_explanation = ""              # why this is hard for agents AND humans
+solution_explanation = ""                # high-level approach + key insights
+verification_explanation = ""            # how the tests verify correctness
+category = ""                            # Science | Software | ML | Operations | Security | Hardware | Media
+subcategory = ""                         # see docs/TAXONOMY.md
+tags = []                                # e.g. ["debugging", "python"]
+expert_time_estimate_hours = 0           # best-case hours for a focused domain expert
+relevant_experience = ""                 # your background that makes this a good task
+
+[verifier]
+timeout_sec = 120.0
+environment_mode = "separate"            
+
+[agent]
+timeout_sec = 120.0                      # edit this field to increase agent time allowances. Premature agent timeouts will not be accepted
+
+[environment]
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 10240
+gpus = 0                                 # max 1 (single H100) if you need GPU

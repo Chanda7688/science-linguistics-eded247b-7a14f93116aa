@@ -1,0 +1,43 @@
+# TB3 automated review — runs on every pull request that touches tasks/**.
+#
+# PROVIDED workflow: a thin pointer to the new Insight QC suite (artificiality →
+# static checks → oracle/nop → rubric → pass@2 → deep review → three fresh trials
+# → combined pass@5 gate). Implementations live in handshake-orchestration-tb3.
+#
+# Copy to: .github/workflows/tb3-review.yml in each task repo.
+
+name: TB3 Review
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths: ["tasks/**"]
+
+permissions:
+  contents: read
+  pull-requests: write
+  # The shared suite reads prior Pass@2 artifacts; it cannot elevate caller permissions.
+  actions: read
+
+# One review at a time per PR. Without this, three pushes in five minutes start three
+# complete pipelines side by side, each carrying a pass@2 job that can run for four
+# hours against Daytona — and only the last one is reviewing code that still exists.
+# Matches handshake-project-dynamo/tb2-template-repo's dynamo-review.yml.
+concurrency:
+  group: tb3-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # Draft PRs iterate freely. `synchronize` fires on every push to a draft too, so
+    # without this a fellow polishing a task in draft burns a full review each time.
+    # Marking the PR ready is the fellow's own signal that it is worth reviewing.
+    if: ${{ github.event.pull_request.draft == false }}
+    # Keep the workflow, suite scripts, and deep reviewer on the same migration branch.
+    uses: handshake-project-insight/handshake-orchestration-tb3/.github/workflows/tb3-conversion-qc.yml@experimental-tb3-conversion-qc
+    with:
+      checks_ref: experimental-tb3-conversion-qc
+      tb3_checks_ref: experimental-tb3-conversion-qc
+    # Match Dynamo's centralized review pointer so newly scoped organization secrets
+    # become available without changing every seeded task repository.
+    secrets: inherit

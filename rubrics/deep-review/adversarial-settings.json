@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(.harbor/deep-review/**)",
+      "Glob(.harbor/deep-review/**)",
+      "Grep(.harbor/deep-review/**)",
+      "Read(submission/task/instruction.md)",
+      "Read(submission/task/tests/**)",
+      "Glob(submission/task/tests/**)",
+      "Grep(submission/task/tests/**)",
+      "Read(submission/task/environment/**)",
+      "Glob(submission/task/environment/**)",
+      "Grep(submission/task/environment/**)",
+      "Read(submission/task/solution/**)",
+      "Glob(submission/task/solution/**)",
+      "Grep(submission/task/solution/**)"
+    ]
+  }
+}

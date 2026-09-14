@@ -1,0 +1,11 @@
+.DS_Store
+.env
+*.log
+__pycache__/
+pass2-output/
+*-analyze/
+cheat-out/
+trials-out/
+ava.json
+ava-out/
+ava-analyze/

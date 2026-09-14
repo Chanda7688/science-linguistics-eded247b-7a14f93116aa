@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(submission/task/**)", "Glob(submission/task/**)", "Grep(submission/task/**)",
+      "Read(pass2-output/**)", "Glob(pass2-output/**)", "Grep(pass2-output/**)",
+      "Read(rubrics/deep-review/**)"
+    ],
+    "deny": ["Bash(**)", "Write(**)", "Edit(**)"]
+  }
+}
